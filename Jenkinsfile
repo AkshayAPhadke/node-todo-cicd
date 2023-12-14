@@ -3,7 +3,7 @@ pipeline {
     stages{
         stage("Clone Code"){
             steps{
-                git url: "https://github.com/LondheShubham153/node-todo-cicd.git", branch: "master"
+                git url: "https://github.com/LondheShubham153/node-todo-cicd.git"
             }
         }
         stage("Build and Test"){
@@ -11,15 +11,7 @@ pipeline {
                 sh "docker build . -t node-app-test-new"
             }
         }
-        stage("Push to Docker Hub"){
-            steps{
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"Akshayphadke@123",usernameVariable:"akshayphadke")]){
-                sh "docker tag node-app-test-new ${env.dockerHubUser}/node-app-test-new:latest"
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker push ${env.dockerHubUser}/node-app-test-new:latest"
-                }
-            }
-        }
+        
         stage("Deploy"){
             steps{
                 sh "docker-compose down && docker-compose up -d"
